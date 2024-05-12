@@ -1,0 +1,13 @@
+spring:
+  rabbitmq:
+    host: localhost
+    username: analytics_service
+    password: password
+    port: 5672
+
+rabbitmq:
+  exchange:
+    scheduled-tasks-exchange: scheduled-tasks-exchange
+  routing-keys:
+    analytics-builder-service-task: analytics-builder-service-task
+    vacancy-import-service-task: vacancy-import-service-task
