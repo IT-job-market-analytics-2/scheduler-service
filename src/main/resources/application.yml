@@ -9,5 +9,8 @@ rabbitmq:
   exchange:
     scheduled-tasks-exchange: scheduled-tasks-exchange
   routing-keys:
-    analytics-builder-service-task: analytics-builder-service-task
-    vacancy-import-service-task: vacancy-import-service-task
+    analytics-builder: analytics-builder-task
+    vacancy-import: vacancy-import-task
+  queue-names:
+    analytics-builder: analytics-builder-scheduled-tasks-queue
+    vacancy-import: vacancy-import-scheduled-tasks-queue
