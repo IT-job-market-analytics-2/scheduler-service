@@ -1,7 +1,6 @@
 package com.dragunov.schedulerservice.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -17,17 +16,18 @@ import org.springframework.core.env.Environment;
 import java.util.Objects;
 
 @Configuration
+@Slf4j
 public class RabbitConfig {
 
     private final Environment env;
 
     @Value("${rabbitmq.exchange.scheduled-tasks-exchange}")
-    private String exchangeName;
+    private String exchange;
 
-    @Value("${rabbitmq.routing-keys.analytics-builder-service-task}")
+    @Value("${rabbitmq.queue-names.analytics-builder}")
     private String analyticsBuilder;
 
-    @Value("${rabbitmq.routing-keys.vacancy-import-service-task}")
+    @Value("${rabbitmq.queue-names.vacancy-import}")
     private String vacancyImport;
 
     @Autowired
@@ -36,8 +36,13 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Jackson2JsonMessageConverter converter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
     public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
+        return new DirectExchange(exchange);
     }
 
     @Bean
@@ -51,20 +56,6 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Binding analyticsBinding(DirectExchange directExchange, Queue analyticsBuilderQueue) {
-        return BindingBuilder.bind(analyticsBuilderQueue)
-                .to(directExchange)
-                .with(env.getProperty("rabbitmq.routing-keys.analytics-builder-service-task"));
-    }
-
-    @Bean
-    public Binding vacancyImportBinding(DirectExchange directExchange, Queue vacancyImportQueue) {
-        return BindingBuilder.bind(vacancyImportQueue)
-                .to(directExchange)
-                .with(env.getProperty("rabbitmq.routing-keys.vacancy-import-service-task"));
-    }
-
-    @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory(env.getProperty("spring.rabbitmq.host"));
         connectionFactory.setUsername(Objects.requireNonNull(env.getProperty("spring.rabbitmq.username")));
@@ -72,6 +63,7 @@ public class RabbitConfig {
         connectionFactory.setPort(env.getProperty("spring.rabbitmq.port", Integer.class));
         return connectionFactory;
     }
+
     @Bean
     public RabbitTemplate amqpTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
