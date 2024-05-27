@@ -1,0 +1,32 @@
+spring:
+  rabbitmq:
+    host: rabbitmq
+    username: analytics_service
+    password: password
+    port: 5672
+
+rabbitmq:
+  exchange:
+    scheduled-tasks-exchange: scheduled-tasks-exchange
+  routing-keys:
+    analytics-builder: analytics-builder-task
+    vacancy-import: vacancy-import-task
+  queue-names:
+    analytics-builder: analytics-builder-scheduled-tasks-queue
+    vacancy-import: vacancy-import-scheduled-tasks-queue
+
+time-to-scheduled:
+  init-delay: 10
+  delay: 3600
+  delay-for-analytics: 20
+
+queries:
+  Java,
+  Kotlin,
+  Android,
+  Javascript,
+  React,
+  PHP,
+  iOS,
+  .NET,
+  Python
