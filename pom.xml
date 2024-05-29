@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<org.projectlombok.version>1.18.30</org.projectlombok.version>
+		<start-class>com.dragunov.schedulerservice.SchedulerServiceApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
