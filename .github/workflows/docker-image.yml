@@ -26,4 +26,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/scheduler-service:${GITHUB_REF#refs/heads/}
+          tags: ${{ secrets.DOCKER_USERNAME }}/scheduler-service:${{ github.ref#refs/heads/ }}
